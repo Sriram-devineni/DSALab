@@ -46,12 +46,15 @@ function main() {
 
     let Wrong = path.join(__dirname, 'WrongOutputs' + folder);
     let Correct = path.join(__dirname, 'CorrectOutputs' + folder);
-    if (!fs.existsSync(Wrong)) {
-        fs.mkdirSync(Wrong);
+    if (fs.existsSync(Wrong)) {
+        fs.rmdirSync(Wrong,{recursive :true});
     }
-    if (!fs.existsSync(Correct)) {
+    fs.mkdirSync(Wrong);
+    if (fs.existsSync(Correct)) {
+        fs.rmdirSync(Correct,{recursive :true});
+        
+    }
         fs.mkdirSync(Correct);
-    }
     try {
         fs.accessSync(folder);
     } catch (err) {
