@@ -28,7 +28,6 @@ function validateNames(folderName, fileName) {
 function main() {
     let folder = process.argv[2];
     let files = fs.readdirSync(__dirname);
-
     let cFilesFolder;
     for (let f of files) {
         if (f.startsWith("ASSG")) {
@@ -47,14 +46,14 @@ function main() {
     let Wrong = path.join(__dirname, 'WrongOutputs' + folder);
     let Correct = path.join(__dirname, 'CorrectOutputs' + folder);
     if (fs.existsSync(Wrong)) {
-        fs.rmdirSync(Wrong,{recursive :true});
+        fs.rmdirSync(Wrong, { recursive: true });
     }
     fs.mkdirSync(Wrong);
     if (fs.existsSync(Correct)) {
-        fs.rmdirSync(Correct,{recursive :true});
-        
+        fs.rmdirSync(Correct, { recursive: true });
+
     }
-        fs.mkdirSync(Correct);
+    fs.mkdirSync(Correct);
     try {
         fs.accessSync(folder);
     } catch (err) {
@@ -88,8 +87,9 @@ function main() {
     let ntestcase = fs.readdirSync(folder).length / 2;
     let correct = [];
     let wrong = [];
-
+    let noofInfinteLoops = 0;
     for (let f of fs.readdirSync(folder)) {
+        let infinity = false;
         if (f.endsWith(".txt") && f.startsWith("in")) {
             let inputfile = path.join(folder, f);
             fs.copyFileSync(inputfile, "input.txt");
@@ -101,21 +101,24 @@ function main() {
             try {
                 let start = Date.now();
                 try {
-                    let child = spawnSync('sh', ['-c', './a.out <input.txt >output.txt'], { timeout: 1000, killSignal: 'SIGKILL' });
-
-                    if (child.error) {
-                        if (child.error.code === 'ETIMEDOUT') {
-                            console.log("Might be an infinite loop . Please debug before running again");
-                            console.error('The process was killed because it did not finish within 1000 ms \n');
-                            console.log("Adjust timeaccordingly if 1000ms is not enough on line: 95 in evaluate.js")
-                        } else {
-                            console.error(`Execution error: ${child.error}\n`);
-                        }
-                    }
+                    execSync('sh -c "./a.out <input.txt >output.txt"', { timeout: 1000 });
                 } catch (err) {
-                    console.error(`Execution error: ${err}`);
-                }
+                    infinity = true;
+                    noofInfinteLoops++;
 
+                    if (err.killed) {
+                        console.log("Might be an infinite loop . Please debug before running again");
+                        console.error('The process was killed because it did not finish within 1000 ms \n');
+                        console.log("Adjust time accordingly if 1000ms is not enough on line: 95 in evaluate.js\n\n");
+                        console.error('\x1b[31m%s\x1b[0m', "Infinite loop may cause your system breakdown or crash. So please restart your system before executing script again.\n\n");
+
+                    } else {
+                        console.log("Might be an infinite loop . Please debug before running again\n\n");
+                        console.log("Adjust time accordingly if 1000ms is not enough on line: 95 in evaluate.js\n\n");
+                        console.error('\x1b[31m%s\x1b[0m', "Infinite loop may cause your system breakdown or crash. So please restart your system before executing script again.\n\n");
+
+                    }
+                }
                 let end = Date.now();
                 let duration = end - start;
                 console.log(`Execution time: \x1b[34m${duration} ms\x1b[0m`);
@@ -140,7 +143,7 @@ function main() {
             let cotxt = outputf.split('\n').map(line => line.trim()).join('\n');
 
             if (cotxt === proctxt) {
-                console.log(`\x1b[32m\tTestcase #${testcaseno}: Correct\x1b[0m\n\n`); // Green for correct
+                console.log(`\x1b[32m\tTestcase #${testcaseno}: Correct\x1b[0m`); // Green for correct
                 correct.push(testcaseno);
                 fs.writeFileSync(path.join(Correct, `TestCase:${testcaseno}.txt`), "");
                 let inputContent = fs.readFileSync("input.txt", "utf8");
@@ -150,8 +153,16 @@ function main() {
                 fs.appendFileSync(path.join(Correct, `TestCase:${testcaseno}.txt`), "\n\nExpected Output:\n");
                 fs.appendFileSync(path.join(Correct, `TestCase:${testcaseno}.txt`), cotxt);
             } else {
-                console.log(`\x1b[31m\tTestcase #${testcaseno}: Wrong\x1b[0m\n\n`); // Red for wrong
+                if (infinity)
+                    console.log(`\x1b[31m\tTestcase #${testcaseno}: Wrong (Might be an infinite loop)\x1b[0m\n\n`); // Red for wrong
+                else
+                    console.log(`\x1b[31m\tTestcase #${testcaseno}: Wrong\x1b[0m\n\n`); // Red for wrong
+
                 wrong.push(testcaseno);
+                if (noofInfinteLoops > 1) {
+                    console.error('\x1b[31m%s\x1b[0m', "Already 2 infinite loops are detected in these test cases. Please restart the computer and debug again or you  can use htop command please refer the documentation\n\n");
+                    process.exit(1);
+                }
                 fs.writeFileSync(path.join(Wrong, `TestCase:${testcaseno}.txt`), "");
                 let inputContent = fs.readFileSync("input.txt", "utf8");
                 fs.appendFileSync(path.join(Wrong, `TestCase:${testcaseno}.txt`), "Input:\n" + inputContent + "\n");
@@ -159,6 +170,8 @@ function main() {
                 fs.appendFileSync(path.join(Wrong, `TestCase:${testcaseno}.txt`), proctxt + "\n");
                 fs.appendFileSync(path.join(Wrong, `TestCase:${testcaseno}.txt`), "\n\nExpected Output:\n");
                 fs.appendFileSync(path.join(Wrong, `TestCase:${testcaseno}.txt`), cotxt);
+                fs.appendFileSync(path.join(Wrong, `TestCase:${testcaseno}.txt`), "Explanation Link(Hold Ctrl and Click)\n");
+                fs.appendFileSync(path.join(Wrong, `TestCase:${testcaseno}.txt`), `https://github.com/nothuman2718/DSALab/blob/main/Test%20Cases/Cycle%201_Part%20A/Q${folder[1]}.md`)
             }
         }
     }
