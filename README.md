@@ -18,12 +18,12 @@ We welcome everyone to contribute to this repo . Anyone having potential edge ca
 - Solving specific issues.
 - Enhancing documentation.
 
-## Automated Script evaluation similar to lab.
+### Automated Script evaluation similar to lab.
 
 - Similar to lab you can only run script in the Linux environment.
 - Only Prerequisite is to have Node installed on your machine.[Please refer documentation](https://nodejs.org/en/docs).
 
-## Benefits of this Script.
+### Benefits of this Script.
 
 - When your test cases gets failed there will be a directory created with WrongOutputs in the same directory as the script file which contains the failed testcase data which itself contains input to that specific test case and output which your code generated and the expected output and link to the explanation of the failed testcase.
 
@@ -42,12 +42,12 @@ We welcome everyone to contribute to this repo . Anyone having potential edge ca
 node evaluate.js q1
 ```
 
-## Things to notice.
+### Things to notice.
 
 - Beaware of infinte loops that can crash your system. We are not responsible for that.If that happens immediately restart the system or use htop command to know the status of your processors and can kill the instruction running on your processors.
 
 - Running of all script files doesn't mean that your code is correct. It just means that your code is passing all the test cases which we included in the script file.
 
-## Motivation behind this repository.
+### Motivation behind this repository.
 
 - "Lift others, lift yourself – that's the way we learn and grow."
