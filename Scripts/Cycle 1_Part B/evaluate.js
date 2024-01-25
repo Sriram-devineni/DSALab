@@ -187,15 +187,15 @@ function main() {
                     fs.appendFileSync(ScriptReport, "Sorry to say but your two processors are using 100% because two infinte loops are running. So please restart your system and debug again or stop the process using htop command.Please google it .\n\n")
                     process.exit(1);
                 }
-                fs.writeFileSync(path.join(Wrong, `TestCase:${testCaseNumber}.txt`), "");
+                // fs.writeFileSync(path.join(Wrong, `TestCase:${testCaseNumber}.txt`), "");
                 let inputContent = fs.readFileSync("input.txt", "utf8");
                 fs.appendFileSync(path.join(Wrong, `TestCase-${testCaseNumber}.txt`), "Input:\n" + inputContent + "\n");
                 fs.appendFileSync(path.join(Wrong, `TestCase-${testCaseNumber}.txt`), "\nYour Output:\n");
                 fs.appendFileSync(path.join(Wrong, `TestCase-${testCaseNumber}.txt`), proctxt + "\n");
                 fs.appendFileSync(path.join(Wrong, `TestCase-${testCaseNumber}.txt`), "\n\nExpected Output:\n");
                 fs.appendFileSync(path.join(Wrong, `TestCase-${testCaseNumber}.txt`), cotxt);
-                fs.appendFileSync(path.join(Wrong, `TestCase-${testCaseNumber}.txt`), "Explanation Link(Hold Ctrl and Click)\n");
-                fs.appendFileSync(path.join(Wrong, `TestCase-${testCaseNumber}.txt`), `https://github.com/nothuman2718/DSALab/blob/main/Test%20Cases/Cycle%201_Part%20A/Q${qn[1]}.md/#test-case-${testCaseNumber}`);
+                fs.appendFileSync(path.join(Wrong, `TestCase-${testCaseNumber}.txt`), "\n\\nExplanation Link(Hold Ctrl and Click)\n");
+                fs.appendFileSync(path.join(Wrong, `TestCase-${testCaseNumber}.txt`), `https://github.com/nothuman2718/DSALab/blob/main/Test%20Cases/Cycle%201_Part%20B/Q${qn[1]}.md/#test-case-${testCaseNumber}`);
                 let content = fs.readFileSync(path.join(Wrong, `TestCase-${testCaseNumber}.txt`), "utf8");
                 fs.appendFileSync(ScriptReport, content);
             }
