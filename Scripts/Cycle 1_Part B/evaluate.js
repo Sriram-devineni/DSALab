@@ -12,13 +12,11 @@ function validateNames(folderName, fileName) {
 
     // Test the folder name
     if (!folderRegex.test(folderName)) {
-        console.log("Invalid folder name");
         return false;
     }
 
     // Test the file name
     if (!fileRegex.test(fileName)) {
-        console.log("Invalid file name");
         return false;
     }
 
@@ -49,11 +47,11 @@ function main() {
     fs.writeFileSync(ScriptReport, "");
     //After every run it will delete the previous files and create new files.
     if (fs.existsSync(Wrong)) {
-        fs.rmdirSync(Wrong, { recursive: true });
+        fs.rmSync(Wrong, { recursive: true });
     }
     fs.mkdirSync(Wrong);
     if (fs.existsSync(Correct)) {
-        fs.rmdirSync(Correct, { recursive: true });
+        fs.rmSync(Correct, { recursive: true });
     }
     fs.mkdirSync(Correct);
 
@@ -77,7 +75,7 @@ function main() {
         fs.appendFileSync(ScriptReport, "Valid folder and file names\n");
     }
     else {
-        console.log("\x1b[91mInvalid folder or file names. Please do remember to keep the folder in this dir or if it is preesent with wrong name then rename the folder and file names as per the instructions given in the pdf.\n\x1b[0m");
+        console.log("\x1b[91mInvalid folder or file names. Rename according to instructions given in the pdf.\n\x1b[0m");
         console.log("\x1b[91mBut our script will try to evaluate your code. If not worked, please rename and try again.\x1b[0m\n");
         fs.appendFileSync(ScriptReport, "Invalid folder or file names. Please do remember to keep the folder in this dir or if it is preesent with wrong name then rename the folder and file names as per the instructions given in the pdf.");
         fs.appendFileSync(ScriptReport, "But our script will try to evaluate your code. If not worked, please rename and try again.\n");
@@ -155,10 +153,9 @@ function main() {
             let cotxt = correctOutput.split('\n').map(line => line.trim()).join('\n');
 
             if (cotxt === proctxt) {
-                console.log(`\x1b[32m\tTestcase #${testCaseNumber}: Correct\x1b[0m`); // Green for correct
+                console.log(`\x1b[32m\tTestcase #${testCaseNumber}: Correct\x1b[0m\n\n`); // Green for correct
                 fs.appendFileSync(ScriptReport, `Testcase #${testCaseNumber}: Correct\n\n`);
                 correct.push(testCaseNumber);
-                fs.writeFileSync(path.join(Correct, `TestCase:${testCaseNumber}.txt`), "");
                 let inputContent = fs.readFileSync("input.txt", "utf8");
                 fs.appendFileSync(path.join(Correct, `TestCase-${testCaseNumber}.txt`), "Input:\n" + inputContent + "\n");
                 fs.appendFileSync(path.join(Correct, `TestCase-${testCaseNumber}.txt`), "\nYour Output:\n");
@@ -187,7 +184,6 @@ function main() {
                     fs.appendFileSync(ScriptReport, "Sorry to say but your two processors are using 100% because two infinte loops are running. So please restart your system and debug again or stop the process using htop command.Please google it .\n\n")
                     process.exit(1);
                 }
-                // fs.writeFileSync(path.join(Wrong, `TestCase:${testCaseNumber}.txt`), "");
                 let inputContent = fs.readFileSync("input.txt", "utf8");
                 fs.appendFileSync(path.join(Wrong, `TestCase-${testCaseNumber}.txt`), "Input:\n" + inputContent + "\n");
                 fs.appendFileSync(path.join(Wrong, `TestCase-${testCaseNumber}.txt`), "\nYour Output:\n");
